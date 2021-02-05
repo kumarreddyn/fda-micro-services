@@ -1,0 +1,31 @@
+server:
+  port: 8111
+
+spring:
+  application:  
+    name: zuul-gateway
+    
+zuul:
+  prefix: /api
+  routes:
+    open-api-service:
+      path: /open-api-service/**
+      service-id: open-api-service
+    file-server:
+      path: /file-server/**
+      service-id: file-server
+    user-service:
+      path: /user-service/**
+      service-id: user-service
+    catalogue-service:
+      path: /catalogue-service/**
+      service-id: catalogue-service
+    order-service:
+      path: /order-service/**
+      service-id: order-service
+    
+      
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
