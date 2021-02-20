@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class ResponseUtil {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(ResponseUtil.class);
 
 	@Autowired
 	ObjectMapper objectMapper;

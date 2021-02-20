@@ -10,4 +10,4 @@ spring:
       server:
         git:
           uri: https://gitlab.com/krn-fda/fda-config-properties.git
-﻿          search-paths: '{application}'
+﻿          search-paths: config/*

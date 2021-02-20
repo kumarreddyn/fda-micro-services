@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -22,29 +22,31 @@ import io.jsonwebtoken.SignatureException;
 @Component
 public class CustomAuthenticationFilter extends OncePerRequestFilter{
 
-	@Autowired
-	JwtConfig jwtConfig;
+	@Value("${jwt.secret.key}") 
+	String jwtSecretKey;
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
 		String xAuthToken = request.getHeader("X_AUTH_TOKEN");
-		
-		Claims claims = decodeToken(xAuthToken);
-        if(null != claims) {        	
-            Authentication auth = new UsernamePasswordAuthenticationToken(AuthorityUtils.createAuthorityList("ROLE_USER"), claims.getSubject());                    
-            SecurityContextHolder.getContext().setAuthentication(auth);                        
-            filterChain.doFilter(request, response);                        
-        }else {        	
-        	throw new SecurityException("Bad Credentials");
-        }
+		if(null != xAuthToken) {
+			Claims claims = decodeToken(xAuthToken);
+	        if(null != claims) {        	
+	            Authentication auth = new UsernamePasswordAuthenticationToken(AuthorityUtils.createAuthorityList("ROLE_USER"), claims.getSubject());                    
+	            SecurityContextHolder.getContext().setAuthentication(auth);                        
+	            filterChain.doFilter(request, response);                        
+	        }else {        	
+	        	throw new SecurityException("Bad Credentials");
+	        }
+		}else {
+			throw new SecurityException("Token is null");
+		}
 		
 	}
 
 	private Claims decodeToken(String xAuthToken) throws JwtException, SignatureException {    	
     	Claims claims = Jwts.parser()
-                .setSigningKey(jwtConfig.getSecret().getBytes())
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(xAuthToken)
                 .getBody();    	
     	return claims;
@@ -53,7 +55,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter{
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		String path = request.getServletPath();
-        return (path.startsWith("/api/open-api-service/") || path.startsWith("/api/file-server/get-file"));
+        return (path.startsWith("/api/open-api-service/") || path.startsWith("/api/file-server/get-file/"));
 	}
 	
 	

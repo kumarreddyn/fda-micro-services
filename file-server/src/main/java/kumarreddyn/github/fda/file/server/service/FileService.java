@@ -16,26 +16,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class FileServerService {
+public class FileService {
 
 	@Value("${file.storage.path}")
 	private String fileStoragePath;
 
 	public String uploadFile(String filePath, MultipartFile file) {			
 		
-		File storageDirectory = new File(fileStoragePath + filePath);
-	    if (! storageDirectory.exists()){
-	    	storageDirectory.mkdirs();		        
-	    }
-	    
-	    String fileName =  fileStoragePath + filePath + file.getOriginalFilename();
-		try {
-			file.transferTo(new File(fileName));
-		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
+		if(null != file) {
+			File storageDirectory = new File(fileStoragePath + filePath);
+		    if (! storageDirectory.exists()){
+		    	storageDirectory.mkdirs();		        
+		    }
+		    
+		    String fileName =  fileStoragePath + filePath + file.getOriginalFilename();
+			try {
+				file.transferTo(new File(fileName));
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+			return filePath + file.getOriginalFilename();
+		}else {
+			return null;
 		}
 		
-		return filePath + file.getOriginalFilename();
 	}
 
 	public ResponseEntity<Resource> getFile(String fileLocation) {
@@ -44,7 +48,7 @@ public class FileServerService {
 		String fileName = fileLocationArray[fileLocationArray.length-1];
 		
 		File file = new File(fileStoragePath + "/" +fileLocation);
-		file.length();
+		//file.length();
 		Path path = Paths.get(file.getAbsolutePath());
 		try {
 			ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));

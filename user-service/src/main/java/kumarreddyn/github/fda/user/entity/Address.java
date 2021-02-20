@@ -31,6 +31,9 @@ public class Address extends AbstractCommonEntity{
 	@Column(name = "address_id")
 	private Long addressId;
 	
+	@Column(name = "name")
+	private String name;
+	
 	@Column(name = "address")
 	private String address;
 	
@@ -44,7 +47,7 @@ public class Address extends AbstractCommonEntity{
 	private String pincode;
 	
 	@Column(name = "mobile_number")
-	private String mobile_number;
+	private String mobileNumber;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })

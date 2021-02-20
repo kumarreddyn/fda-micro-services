@@ -2,16 +2,15 @@
 
 <configuration>
  
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n" />
-    <springProperty scope="context" name="APP_LOG_ROOT" source="logging.file.path"/>
+    <property name="LOG_PATTERN" value="%green(%d{dd-MM-yyyy HH:mm:ss.SSS}) %highlight(%level) %magenta([%thread]) - %cyan(%logger{36}.%M) - %msg%n" />
     
     <appender name="appLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${APP_LOG_ROOT}/app/app.log</file>
+        <file>${LOG_PATH}/app/app.log</file>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>${APP_LOG_ROOT}/app/app-%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/app/app-%i.log</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>10</maxIndex>
         </rollingPolicy>
@@ -21,12 +20,12 @@
     </appender>  
     
     <appender name="contextLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${APP_LOG_ROOT}/context/context.log</file>
+        <file>${LOG_PATH}/user-service/user.log</file>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>${APP_LOG_ROOT}/context/context-%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/user-service/user-%i.log</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>10</maxIndex>
         </rollingPolicy>
